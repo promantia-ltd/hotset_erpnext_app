@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include hotset_customizations *.css
+recursive-include hotset_customizations *.csv
+recursive-include hotset_customizations *.html
+recursive-include hotset_customizations *.ico
+recursive-include hotset_customizations *.js
+recursive-include hotset_customizations *.json
+recursive-include hotset_customizations *.md
+recursive-include hotset_customizations *.png
+recursive-include hotset_customizations *.py
+recursive-include hotset_customizations *.svg
+recursive-include hotset_customizations *.txt
+recursive-exclude hotset_customizations *.pyc
