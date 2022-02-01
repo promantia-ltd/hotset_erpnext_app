@@ -9,6 +9,44 @@ app_color = "grey"
 app_email = "hotset_customizations@gmail.com"
 app_license = "MIT"
 
+fixtures = [
+{"dt": "Custom Field",
+	"filters": [
+	[
+             "name", "in", [
+		"BOM Item-input_source",
+		"Workstation-section_break_13",
+		"Workstation-wip_warehouse",
+		"Workstation-input_sources"
+		]
+	]
+	]
+}	
+]
+
+doctype_js = {
+	"BOM" : "hotset_customizations/doctype/bom/bom.js",
+	"Workstation": "hotset_customizations/doctype/workstation/workstation.js",
+	"Work Order": "hotset_customizations/doctype/work_order/work_order.js",
+	"Stock Entry": "hotset_customizations/doctype/stock_entry/stock_entry.js"
+}
+
+doc_events = {
+    	"Stock Entry": {
+		"on_submit": ["hotset_customizations.hotset_customizations.doctype.stock_entry.stock_entry.set_serial_no_status"],
+		"before_cancel": ["hotset_customizations.hotset_customizations.doctype.stock_entry.stock_entry.set_serial_no_status"],
+		"before_save": ["hotset_customizations.hotset_customizations.doctype.stock_entry.stock_entry.before_save"]
+
+	},
+	"Serial No": {
+		"before_insert": ["hotset_customizations.hotset_customizations.doctype.serial_no.serial_no.before_insert"],
+		"on_save":["hotset_customizations.hotset_customizations.doctype.serial_no.serial_no.on_save"]
+	},
+	"Purchase Receipt": {
+		"on_submit": ["hotset_customizations.hotset_customizations.doctype.purchase_receipt.purchase_receipt.after_submit"]
+	}
+}
+
 # Includes in <head>
 # ------------------
 
