@@ -17,7 +17,10 @@ fixtures = [
 		"BOM Item-input_source",
 		"Workstation-section_break_13",
 		"Workstation-wip_warehouse",
-		"Workstation-input_sources"
+		"Workstation-input_sources",
+		"Serial No-stock_warehouse",
+		"Serial No-secondary_uom",
+		"Serial No-available_qty"
 		]
 	]
 	]
