@@ -74,9 +74,9 @@ def hotset_validate_serial_no(sle, item_det):
 							frappe.throw(_("Serial no {0} has been already returned").format(sr.name))
 
 					if cint(sle.actual_qty) < 0:
-						if sr.warehouse!=sle.warehouse:
-							frappe.throw(_("Serial No {0} does not belong to Warehouse {1}").format(serial_no,
-								sle.warehouse), SerialNoWarehouseError)
+						#if sr.warehouse!=sle.warehouse:
+							#frappe.throw(_("Serial No {0} does not belong to Warehouse {1}").format(serial_no,
+								#sle.warehouse), SerialNoWarehouseError)
 
 						if not sr.purchase_document_no:
 							frappe.throw(_("Serial No {0} not in stock").format(serial_no), SerialNoNotExistsError)

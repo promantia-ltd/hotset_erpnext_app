@@ -21,8 +21,8 @@ def get_serial_no(item,warehouse):
 
 def set_serial_no_status(doc,method):
     if doc.stock_entry_type=="Material Transfer for Manufacture":
-        serial_no_list=[]
         for item in doc.items:
+            serial_no_list=[]
             if item.serial_no:
                 serial_no=item.serial_no
                 item_serial_nos=serial_no.split("\n")
