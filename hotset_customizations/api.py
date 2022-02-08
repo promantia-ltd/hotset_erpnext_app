@@ -14,8 +14,6 @@ from six import string_types
 from six.moves import map
 
 from erpnext.controllers.stock_controller import StockController
-from erpnext.stock.get_item_details import get_reserved_qty_for_so
-
 
 class SerialNoCannotCreateDirectError(ValidationError): pass
 class SerialNoCannotCannotChangeError(ValidationError): pass
@@ -141,3 +139,12 @@ def hotset_validate_serial_no(sle, item_det):
 		# SLE is being cancelled and has serial nos
 		for serial_no in serial_nos:
 			check_serial_no_validity_on_cancel(serial_no, sle)
+
+def get_reserved_qty_for_so(sales_order, item_code):
+	reserved_qty = frappe.db.sql("""select sum(qty) from `tabSales Order Item`
+	where parent=%s and item_code=%s and ensure_delivery_based_on_produced_serial_no=1
+	""", (sales_order, item_code))
+	if reserved_qty and reserved_qty[0][0]:
+		return reserved_qty[0][0]
+	else:
+		return 0

@@ -17,6 +17,6 @@ def after_submit(doc,method):
         uom_list=frappe.db.get_list("UOM Conversion Detail",filters={'uom': ['!=',item_doc.stock_uom],'parent': item_doc.item_code},fields={'*'})
         serial_no_doc.db_set('available_qty', 1/uom_list[0].conversion_factor)
         serial_no_doc.db_set('secondary_uom', uom_list[0].uom)
-        serial_no_doc.db_set('stock_warehouse',doc.set_warehouse) 
+        serial_no_doc.db_set('stock_warehouse',serial_no_doc.warehouse)
         frappe.db.commit()
 
