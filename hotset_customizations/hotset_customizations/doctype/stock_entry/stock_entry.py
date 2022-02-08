@@ -57,3 +57,21 @@ def before_save(doc,method):
                             serial_no_list=serial_no_list+str(se_item.serial_no)+"\n"
                     if serial_no_list:
                         item.serial_no=serial_no_list
+
+    item_with_stock=[]
+    items_removed=""
+    if doc.stock_entry_type=="Material Transfer for Manufacture":
+        for item in doc.items:
+            item_data=[item.item_code,item.s_warehouse]
+            projected_qty = frappe.db.get_value('Bin', {'item_code': item.item_code,'warehouse':item.s_warehouse}, 'projected_qty')
+            if projected_qty>=item.qty:
+                  item_with_stock.append(item_data)
+    for item_stock in item_with_stock:
+        for item in doc.items:
+            if item.item_code==item_stock[0] and item.s_warehouse==item_stock[1]:
+                if items_removed!="":
+                    items_removed=items_removed+", "
+                items_removed=items_removed+str(item.item_code)+"-"+str(item.s_warehouse)+" "
+                doc.remove(item)
+    if items_removed!="":
+        frappe.msgprint("Removed items: "+items_removed+"as Stock available in the warehouse")
