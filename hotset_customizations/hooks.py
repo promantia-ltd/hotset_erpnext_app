@@ -21,7 +21,8 @@ fixtures = [
 		"Workstation-input_sources",
 		"Serial No-stock_warehouse",
 		"Serial No-secondary_uom",
-		"Serial No-available_qty"
+		"Serial No-available_qty",
+		"Stock Entry Detail-required_qty"
 		]
 	]
 	]
@@ -38,7 +39,6 @@ doctype_js = {
 doc_events = {
     	"Stock Entry": {
 		"on_submit": ["hotset_customizations.hotset_customizations.doctype.stock_entry.stock_entry.set_serial_no_status"],
-		"before_cancel": ["hotset_customizations.hotset_customizations.doctype.stock_entry.stock_entry.set_serial_no_status"],
 		"before_save": ["hotset_customizations.hotset_customizations.doctype.stock_entry.stock_entry.before_save"]
 
 	},

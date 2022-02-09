@@ -30,6 +30,13 @@ frappe.ui.form.on('Work Order', {
 		    })
 		})
 		
+	},
+	before_save:function(frm,cdt,cdn){
+		var from_warehouse=""
+		$.each(frm.doc.required_items, function(idx, item){
+			from_warehouse=item.source_warehouse
+		})
+		frm.set_value("source_warehouse",from_warehouse)
 	}
 })
 
