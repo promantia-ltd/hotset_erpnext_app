@@ -27,7 +27,6 @@ class SerialNoNotExistsError(ValidationError): pass
 class SerialNoDuplicateError(ValidationError): pass
 
 
-
 	
 def hotset_validate_serial_no(sle, item_det):
 	serial_nos = get_serial_nos(sle.serial_no) if sle.serial_no else []
