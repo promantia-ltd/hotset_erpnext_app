@@ -12,7 +12,7 @@ from frappe.model.naming import make_autoname
 from frappe.utils import add_days, cint, cstr, flt, get_link_to_form, getdate, nowdate
 from six import string_types
 from six.moves import map
-from erpnext.controllers.stock_controller import StockController
+#from erpnext.controllers.stock_controller import StockController
 
 class SerialNoCannotCreateDirectError(ValidationError): pass
 class SerialNoCannotCannotChangeError(ValidationError): pass
