@@ -1,0 +1,53 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2022-03-04 11:29:38.587581",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "work_order",
+  "warehouse",
+  "reserved_qty",
+  "consumed_qty"
+ ],
+ "fields": [
+  {
+   "fieldname": "work_order",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Work Order",
+   "options": "Work Order"
+  },
+  {
+   "fieldname": "reserved_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Reserved Qty"
+  },
+  {
+   "fieldname": "warehouse",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Warehouse",
+   "options": "Warehouse"
+  },
+  {
+   "fieldname": "consumed_qty",
+   "fieldtype": "Float",
+   "in_list_view": 1,
+   "label": "Consumed Qty"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2022-03-04 13:22:57.646094",
+ "modified_by": "Administrator",
+ "module": "hotset_customizations",
+ "name": "Stock Details",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC"
+}

@@ -10,7 +10,7 @@ app_color = "grey"
 app_email = "hotset_customizations@gmail.com"
 app_license = "MIT"
 
-fixtures = [
+fixtures = ["Server Script",
 {"dt": "Custom Field",
 	"filters": [
 	[
@@ -22,7 +22,10 @@ fixtures = [
 		"Serial No-stock_warehouse",
 		"Serial No-secondary_uom",
 		"Serial No-available_qty",
-		"Stock Entry Detail-required_qty"
+		"Stock Entry Detail-required_qty",
+		"Serial No-stock_transactions",
+		"Serial No-stock_details",
+		"Work Order-skip_material_transfer"
 		]
 	]
 	]
@@ -39,7 +42,8 @@ doctype_js = {
 doc_events = {
     	"Stock Entry": {
 		"on_submit": ["hotset_customizations.hotset_customizations.doctype.stock_entry.stock_entry.set_serial_no_status"],
-		"before_save": ["hotset_customizations.hotset_customizations.doctype.stock_entry.stock_entry.before_save"]
+		"before_save": ["hotset_customizations.hotset_customizations.doctype.stock_entry.stock_entry.before_save"],
+		"on_cancel": ["hotset_customizations.hotset_customizations.doctype.stock_entry.stock_entry.on_cancel"]
 
 	},
 	"Serial No": {
