@@ -25,7 +25,8 @@ fixtures = ["Server Script",
 		"Stock Entry Detail-required_qty",
 		"Serial No-stock_transactions",
 		"Serial No-stock_details",
-		"Work Order-skip_material_transfer"
+		"Work Order-skip_material_transfer",
+		"Stock Entry-comment"
 		]
 	]
 	]

@@ -17,6 +17,7 @@ def reserve_qty(item,warehouse,item_qty,work_order,bom_qty,wo_qty):
                 from `tabSerial No`
                 where item_code = %s and stock_warehouse=%s and status not in ("Inactive","Expired") and available_qty>=%s order by creation
         """, (item,warehouse,qty))
+    reserved=False
     if query:
         serial_no=query[0][0]
         sn_doc=frappe.get_doc("Serial No",serial_no)
@@ -37,10 +38,27 @@ def reserve_qty(item,warehouse,item_qty,work_order,bom_qty,wo_qty):
                     })
                     sn_doc.save(ignore_permissions=True)
         frappe.db.commit()
-        comment=warehouse+" : <a href='/app/serial-no/"+serial_no+"'>"+serial_no+"</a> : "+str(qty)+" "+sn_doc.secondary_uom+"<br>"
-        return comment
+        comment=warehouse+" : <a href='/app/serial-no/"+serial_no+"'>"+serial_no+"</a> : "+str(round(qty,2))+" "+sn_doc.secondary_uom+"<br>"
+        reserved=True
+        return comment,reserved
+
+    else:
+        return reserved
 
 @frappe.whitelist()
 def add_comment(doctype,docname,comment):
     wo_doc=frappe.get_doc(doctype,docname)
     wo_doc.add_comment('Comment',comment)
+
+@frappe.whitelist()
+def check_stock(item,warehouse,item_qty,work_order,bom_qty,wo_qty):
+    qty=float(item_qty)*float(wo_qty)/float(bom_qty)
+    query= frappe.db.sql("""
+                select name
+                from `tabSerial No`
+                where item_code = %s and stock_warehouse=%s and status not in ("Inactive","Expired") and available_qty>=%s order by creation
+        """, (item,warehouse,qty))
+    if query:
+        return True
+    else:
+        return False

@@ -3,11 +3,11 @@
 
 
 frappe.ui.form.on('Stock Entry', {
-	refresh:function(frm,cdt,cdn){
+	onload:function(frm,cdt,cdn){
 		var finished_item=""
-		frappe.db.get_value("Work Order",frm.doc.work_order,"source_warehouse",(c)=>{
-			frm.set_value("from_warehouse",c.source_warehouse)
-		})
+		frappe.db.get_value("Work Order",frm.doc.work_order,"source_warehouse",(w)=>{
+			frm.set_value("from_warehouse",w.source_warehouse)
+		
 		if(frm.doc.stock_entry_type=="Material Transfer for Manufacture"){
 		const serial_no_assigned=[];
 		if(frm.doc.__islocal==1){
@@ -21,7 +21,7 @@ frappe.ui.form.on('Stock Entry', {
 								method:"hotset_customizations.hotset_customizations.doctype.stock_entry.stock_entry.get_serial_no",
 								args:{
 									item:detail.item_code,
-									warehouse:frm.doc.from_warehouse,
+									warehouse:w.source_warehouse,
 									qty:(detail.stock_qty/c.quantity)*frm.doc.fg_completed_qty	
 								},
 								async:false,
@@ -68,7 +68,7 @@ frappe.ui.form.on('Stock Entry', {
 			}
 		}
 		}
-
+		})
 		if(frm.doc.stock_entry_type=="Manufacture"){
 			const serial_no_assigned=[];
 			if(frm.doc.__islocal==1){
@@ -219,6 +219,23 @@ frappe.ui.form.on('Stock Entry', {
 				}
 			}
 			}
+	},
+	after_save:function(frm,cdt,cdn){
+		if(frm.doc.docstatus!=1){
+		if(frm.doc.comment){
+		frappe.call({
+		"method": "frappe.desk.form.utils.add_comment",
+"args": {
+  reference_doctype: frm.doctype,
+  reference_name: frm.doc.name,
+  content: frm.doc.comment,
+  comment_email: frappe.session.user,
+  comment_by: frappe.session.user_fullname,
+                }
+            });
+		msgprint(frm.doc.comment,'Alert')
+	}
+	}
 	}
 
 })
