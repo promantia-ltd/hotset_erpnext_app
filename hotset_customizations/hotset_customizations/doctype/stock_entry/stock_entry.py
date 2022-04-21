@@ -87,7 +87,10 @@ def set_serial_no_status(doc,method):
                     serial_no_list=[]
                     item_doc=frappe.get_doc("Item",item.item_code)
                     uom_list=frappe.db.get_list("UOM Conversion Detail",filters={'parenttype':'Item','parent':item.item_code,'uom':['!=',item_doc.stock_uom]},fields={'*'})
-                    stock_qty=float(item.qty)/float(uom_list[0].conversion_factor)
+                    if uom_list[0].uom!=item.uom:
+                        stock_qty=float(item.qty)/float(uom_list[0].conversion_factor)
+                    else:
+                        stock_qty=item.qty
                     total_qty=stock_qty
                     serial_no=item.serial_no
                     if serial_no:
@@ -114,7 +117,10 @@ def set_serial_no_status(doc,method):
                     serial_no_list=[]
                     item_doc=frappe.get_doc("Item",item.item_code)
                     uom_list=frappe.db.get_list("UOM Conversion Detail",filters={'parenttype':'Item','parent':item.item_code,'uom':['!=',item_doc.stock_uom]},fields={'*'})
-                    stock_qty=float(item.qty)/float(uom_list[0].conversion_factor)
+                    if uom_list[0].uom!=item.uom:
+                        stock_qty=float(item.qty)/float(uom_list[0].conversion_factor)
+                    else:
+                        stock_qty=item.qty
                     total_qty=stock_qty
                     serial_no=item.serial_no
                     if serial_no:
