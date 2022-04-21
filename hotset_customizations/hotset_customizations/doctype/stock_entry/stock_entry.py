@@ -40,6 +40,15 @@ def get_item_serial_no(item,warehouse,qty,work_order):
         frappe.throw('Crossed the Serial No limit. Maximum: '+(1/float(uom_list[0].conversion_factor))+' Expected: '+stock_qty)
     return query
 
+def before_submit(doc,method):
+    if doc.stock_entry_type=="Manufacture":
+        for item in doc.items:
+                if item.is_finished_item!=1:
+                    serial_no=item.serial_no
+                    if not serial_no:
+                        frappe.throw('Please Set appropriate Serial No for item at row '+str(item.idx)) 
+
+
 
 def set_serial_no_status(doc,method):
     if doc.stock_entry_type=="Material Transfer for Manufacture":
@@ -72,30 +81,56 @@ def set_serial_no_status(doc,method):
         doc.add_comment('Comment',comment)
 
     if doc.stock_entry_type=="Manufacture":
-        for item in doc.items:
-            if item.is_finished_item!=1:
-                serial_no_list=[]
-                item_doc=frappe.get_doc("Item",item.item_code)
-                uom_list=frappe.db.get_list("UOM Conversion Detail",filters={'parenttype':'Item','parent':item.item_code,'uom':['!=',item_doc.stock_uom]},fields={'*'})
-                stock_qty=float(item.qty)/float(uom_list[0].conversion_factor)
-                total_qty=stock_qty
-                serial_no=item.serial_no
-                item_serial_nos=serial_no.split("\n")
-                length = len(item_serial_nos)
-                for i in range(length):
-                    serial_no_list.append(item_serial_nos[i])
-                list_length=len(serial_no_list)
-                for i in range(list_length):
-                    if serial_no_list[i]!="":
-                        sn_doc=frappe.get_doc("Serial No",serial_no_list[i])
-                        stock_detail_doc=frappe.db.get_value('Stock Details',{'parent':sn_doc.name,'work_order': doc.work_order},'name')
-                        if stock_detail_doc:
-                            stock_detail_doc=frappe.get_doc("Stock Details",stock_detail_doc)
-                            stock_detail_doc.db_set('reserved_qty',stock_detail_doc.reserved_qty-stock_qty)
-                            stock_detail_doc.db_set('consumed_qty',stock_detail_doc.consumed_qty+stock_qty)
-                            sn_doc.add_comment('Comment','Used qty: '+str(round(stock_qty, 2))+' for transaction with Stock Entry: '+doc.name)
-                        frappe.db.commit()
-
+        if doc.work_order:
+            for item in doc.items:
+                if item.is_finished_item!=1:
+                    serial_no_list=[]
+                    item_doc=frappe.get_doc("Item",item.item_code)
+                    uom_list=frappe.db.get_list("UOM Conversion Detail",filters={'parenttype':'Item','parent':item.item_code,'uom':['!=',item_doc.stock_uom]},fields={'*'})
+                    stock_qty=float(item.qty)/float(uom_list[0].conversion_factor)
+                    total_qty=stock_qty
+                    serial_no=item.serial_no
+                    if serial_no:
+                        item_serial_nos=serial_no.split("\n")
+                        length = len(item_serial_nos)
+                        for i in range(length):
+                            serial_no_list.append(item_serial_nos[i])
+                        list_length=len(serial_no_list)
+                        for i in range(list_length):
+                            if serial_no_list[i]!="":
+                                sn_doc=frappe.get_doc("Serial No",serial_no_list[i])
+                                stock_detail_doc=frappe.db.get_value('Stock Details',{'parent':sn_doc.name,'work_order': doc.work_order},'name')
+                                if stock_detail_doc:
+                                    stock_detail_doc=frappe.get_doc("Stock Details",stock_detail_doc)
+                                    stock_detail_doc.db_set('reserved_qty',stock_detail_doc.reserved_qty-stock_qty)
+                                    stock_detail_doc.db_set('consumed_qty',stock_detail_doc.consumed_qty+stock_qty)
+                                    sn_doc.add_comment('Comment','Used qty: '+str(round(stock_qty, 2))+' for transaction with Stock Entry: '+doc.name)
+                                frappe.db.commit()
+                    else:
+                        frappe.throw('Please Set appropriate Serial No for item at row '+str(item.idx)) 
+        else:
+            for item in doc.items:
+                if item.is_finished_item!=1:
+                    serial_no_list=[]
+                    item_doc=frappe.get_doc("Item",item.item_code)
+                    uom_list=frappe.db.get_list("UOM Conversion Detail",filters={'parenttype':'Item','parent':item.item_code,'uom':['!=',item_doc.stock_uom]},fields={'*'})
+                    stock_qty=float(item.qty)/float(uom_list[0].conversion_factor)
+                    total_qty=stock_qty
+                    serial_no=item.serial_no
+                    if serial_no:
+                        item_serial_nos=serial_no.split("\n")
+                        length = len(item_serial_nos)
+                        for i in range(length):
+                            serial_no_list.append(item_serial_nos[i])
+                        list_length=len(serial_no_list)
+                        for i in range(list_length):
+                            if serial_no_list[i]!="":
+                                sn_doc=frappe.get_doc("Serial No",serial_no_list[i])
+                                sn_doc.db_set('available_qty',sn_doc.available_qty-stock_qty)
+                                sn_doc.add_comment('Comment','Used qty: '+str(round(stock_qty, 2))+' for transaction with Stock Entry: '+doc.name)
+                                frappe.db.commit()
+                    else:
+                        frappe.throw('Please Set appropriate Serial No for item at row '+str(item.idx))
 def before_save(doc,method):
     item_with_stock=[]
     items_removed=""
