@@ -33,6 +33,7 @@ fixtures = ["Server Script",
 }	
 ]
 
+
 doctype_js = {
 	"BOM" : "hotset_customizations/doctype/bom/bom.js",
 	"Workstation": "hotset_customizations/doctype/workstation/workstation.js",
