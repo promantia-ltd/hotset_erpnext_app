@@ -30,13 +30,13 @@ def get_item_serial_no(item,warehouse,qty,work_order):
 
     uom_list=frappe.db.get_list("UOM Conversion Detail",filters={'parenttype':'Item','parent':item,'uom':['!=',item_doc.stock_uom]},fields={'*'})
     
-    stock_qty=float(qty)/float(uom_list[0].conversion_factor)
+    stock_qty=round((round(float(qty),2)/float(uom_list[0].conversion_factor)),2)
     if stock_qty:
         query= frappe.db.sql("""
                 select sd.parent,available_qty
                 from `tabSerial No` s,`tabStock Details` sd
                 where s.name=sd.parent and s.item_code = %s and sd.warehouse=%s and s.status not in ("Inactive","Expired") and sd.reserved_qty>=%s and sd.work_order=%s order by s.creation
-        """, (item,warehouse,round(stock_qty,2),work_order))
+        """, (item,warehouse,stock_qty,work_order))
     else:
         frappe.throw('Crossed the Serial No limit. Maximum: '+(1/float(uom_list[0].conversion_factor))+' Expected: '+stock_qty)
     return query
