@@ -10,6 +10,7 @@ app_color = "grey"
 app_email = "hotset_customizations@gmail.com"
 app_license = "MIT"
 
+
 fixtures = ["Server Script",
 {"dt": "Custom Field",
 	"filters": [
